@@ -10,7 +10,7 @@ var os = OpenSeadragon({
 	navigatorWidth: 200,
 	imageSmoothingEnabled: false,
 	minScrollDeltaTime: 50,
-	springStiffness: 6.5,
+	springStiffness: 30,
 	tileSources: {
 		Image: {
 			xmlns:    "http://schemas.microsoft.com/deepzoom/2008",
