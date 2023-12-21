@@ -17,7 +17,7 @@ var os = OpenSeadragon({
 			Url:      "maps/noita-2023-12-21/",
 			Format:   "png",
 			Overlap:  "1",
-			TileSize: "256",
+			TileSize: "512",
 			Size: {
 				Width:  "51712",
 				Height: "74240"
