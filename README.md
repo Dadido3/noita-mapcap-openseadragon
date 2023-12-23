@@ -1,6 +1,8 @@
 # Noita MapCap OpenSeadragon
 
-An example OpenSeadragon project for map captures that were made with [Dadido3/noita-mapcap](https://github.com/Dadido3/noita-mapcap).
+This is a web-based world viewer of the video game [Noita](https://noitagame.com/), based on OpenSeadragon.
+
+You can self host this somewhere, and use it to view/show map captures that you have made with [Dadido3/noita-mapcap](https://github.com/Dadido3/noita-mapcap).
 
 ## Usage
 
