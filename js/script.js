@@ -1,5 +1,6 @@
 var os = OpenSeadragon({
 	id: "os-container",
+	prefixUrl: "vendor/openseadragon-bin-4.1.0/images/",
 	//minZoomLevel: 0,
 	//maxZoomLevel: 100,
 	maxZoomPixelRatio: 20,
