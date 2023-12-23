@@ -11,6 +11,7 @@ var os = OpenSeadragon({
 	navigatorHeight: 285,
 	navigatorWidth: 200,
 	imageSmoothingEnabled: false,
+	subPixelRoundingForTransparency: OpenSeadragon.SUBPIXEL_ROUNDING_OCCURRENCES.ALWAYS,
 	minScrollDeltaTime: 50,
 	springStiffness: 30,
 	tileSources: {
