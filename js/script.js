@@ -1,7 +1,8 @@
 var os = OpenSeadragon({
 	id: "os-container",
-	minZoomLevel: 0,
-	maxZoomLevel: 100,
+	//minZoomLevel: 0,
+	//maxZoomLevel: 100,
+	maxZoomPixelRatio: 20,
 	defaultZoomLevel: 0,
 	showNavigator: true,
 	navigatorPosition: "BOTTOM_RIGHT",
