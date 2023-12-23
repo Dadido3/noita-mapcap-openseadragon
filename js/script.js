@@ -12,7 +12,15 @@ var os = OpenSeadragon({
 	navigatorWidth: 200,
 	imageSmoothingEnabled: false,
 	subPixelRoundingForTransparency: OpenSeadragon.SUBPIXEL_ROUNDING_OCCURRENCES.ALWAYS,
-	minScrollDeltaTime: 50,
-	springStiffness: 30,
-	tileSources: "maps/example.dzi"
+	smoothTileEdgesMinZoom: 1,
+	minScrollDeltaTime: 10,
+	springStiffness: 50,
+	tileSources: ["maps/example.dzi"]
+	/*overlays: [{
+		className: "overlay-highlight",
+		x: 0.33,
+		y: 0.75,
+		width: 0.2,
+		height: 0.25
+	}]*/
 });
