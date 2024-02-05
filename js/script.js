@@ -16,6 +16,7 @@ let osdViewer = OpenSeadragon({
 	minScrollDeltaTime: 10,
 	springStiffness: 50,
 	//tileSources: source1,
+	imageLoaderLimit: 1,
 });
 
 // Disable click to zoom
