@@ -1,4 +1,4 @@
-let osdViewer = OpenSeadragon({
+const osdViewer = OpenSeadragon({
 	id: "osd-container",
 	prefixUrl: "vendor/openseadragon-bin-4.1.0/images/",
 	//minZoomLevel: 0,
@@ -15,7 +15,7 @@ let osdViewer = OpenSeadragon({
 	smoothTileEdgesMinZoom: 1,
 	minScrollDeltaTime: 10,
 	springStiffness: 50,
-	//tileSources: source1,
+	preserveViewport: true,
 	imageLoaderLimit: 1,
 });
 
@@ -76,28 +76,75 @@ osdViewer.addHandler('open',function(){
 	}
 }, rasterPattern);*/
 
-let e = document.createElement("div");
-e.className = "overlay-highlight";
-osdViewer.addOverlay({
-	element: e,
-	location: new OpenSeadragon.Rect(512 * 3, 512, 512, 512)
-});
-
-let coordinatePixelX = document.getElementById("coordinate-pixel-x");
-let coordinatePixelY = document.getElementById("coordinate-pixel-y");
-let coordinateChunkX = document.getElementById("coordinate-chunk-x");
-let coordinateChunkY = document.getElementById("coordinate-chunk-y");
-function onMouseTrackerMove(event) {
-	let webPoint = event.position;
-	let viewportPoint = osdViewer.viewport.pointFromPixel(webPoint);
-
-	coordinatePixelX.textContent = Math.floor(viewportPoint.x).toString();
-	coordinatePixelY.textContent = Math.floor(viewportPoint.y).toString();
-
-	coordinateChunkX.textContent = Math.floor(viewportPoint.x/512).toString();
-	coordinateChunkY.textContent = Math.floor(viewportPoint.y/512).toString();
+{
+	const e = document.createElement("div");
+	e.className = "overlay-highlight";
+	osdViewer.addOverlay({
+		element: e,
+		location: new OpenSeadragon.Rect(3 * 512, 1 * 512, 512, 512)
+	});
 }
-let mouseTracker = new OpenSeadragon.MouseTracker({
+
+{
+	const e = document.createElement("div");
+	e.className = "overlay-highlight";
+	e.innerHTML = `<span>The Work (Sky)</span>`;
+	osdViewer.addOverlay({
+		element: e,
+		location: new OpenSeadragon.Rect(1 * 512, -3 * 512, 512, 512)
+	});
+}
+
+// Update hover element that shows the world coordinates near the mouse cursor.
+const coordinatesHover = document.getElementById("coordinates-hover");
+const mouseTracker = new OpenSeadragon.MouseTracker({
 	element: document.getElementById("osd-container"),
-	moveHandler: onMouseTrackerMove
+	moveHandler: function (event) {
+		if (event.pointerType != "mouse") { return }
+		const webPoint = event.position;
+		const viewportPoint = osdViewer.viewport.pointFromPixel(webPoint);
+
+		const pixelX = Math.floor(viewportPoint.x).toString();
+		const pixelY = Math.floor(viewportPoint.y).toString();
+		const chunkX = Math.floor(pixelX / 512).toString();
+		const chunkY = Math.floor(pixelY / 512).toString();
+		coordinatesHover.innerHTML = `<span>(${pixelX}, ${pixelY})</span><br><span>(${chunkX}, ${chunkY})</span>`;
+
+		coordinatesHover.style.left = `${webPoint.x}px`;
+		coordinatesHover.style.top = `calc(${webPoint.y}px + 1em)`;
+	},
+	enterHandler: function onMouseTrackerMove(event) {
+		if (event.pointerType != "mouse") { return }
+		coordinatesHover.style.visibility = "visible";
+	},
+	leaveHandler: function onMouseTrackerMove(event) {
+		if (event.pointerType != "mouse") { return }
+		coordinatesHover.style.visibility = "hidden";
+	},
 }).setTracking(true);
+
+// Store and load viewport position and zoom level in URL parameters.
+{
+	const urlParams = new URLSearchParams(window.location.search);
+	let bounds;
+	if (urlParams.has("x") && urlParams.has("y") && urlParams.has("width") && urlParams.has("height")) {
+		const viewportX = Number(urlParams.get("x"));
+		const viewportY = Number(urlParams.get("y"));
+		const viewportWidth = Number(urlParams.get("width"));
+		const viewportHeight = Number(urlParams.get("height"));
+		bounds = new OpenSeadragon.Rect(viewportX, viewportY, viewportWidth, viewportHeight);
+	} else {
+		bounds = new OpenSeadragon.Rect(-150, -350, 1024, 512);
+	}
+	osdViewer.viewport.fitBounds(bounds, true);
+}
+osdViewer.addHandler("animation-finish", function (event) {
+	// Update URL parameter.
+	const bounds = event.eventSource.viewport.getBounds();
+	const urlParams = new URLSearchParams(window.location.search);
+	urlParams.set("x", bounds.x.toFixed(0));
+	urlParams.set("y", bounds.y.toFixed(0));
+	urlParams.set("width", bounds.width.toFixed(0));
+	urlParams.set("height", bounds.height.toFixed(0));
+	window.history.replaceState(null, null, "?" + urlParams.toString());
+});

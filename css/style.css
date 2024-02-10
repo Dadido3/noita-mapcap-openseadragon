@@ -11,24 +11,36 @@ body {
 }
 
 #menu-container {
-	padding: 0;
+	position: absolute;
+	top: 50px;
+	left: 0px;
+	bottom: 0px;
+	padding: 1em;
+	z-index: 1;
+	pointer-events: none;
 }
 
-.select-grid {
-	display: grid !important;
-	grid-template-columns: auto 1fr;
-	gap: 1em 1em;
-	margin: 1em;
+#captures-list {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	user-select: none;
 }
 
-.coordinate-grid {
-	display: grid !important;
-	grid-template-columns: auto 1fr 1fr;
-	gap: 1em 1em;
-	margin: 1em;
+#captures-list > div {
+	pointer-events: auto;
 }
 
 #osd-container {
+	position: relative;
 	flex-grow: 1;
 	background-color: black;
+	overflow: hidden;
+}
+
+#coordinates-hover {
+	position: absolute;
+	pointer-events: none;
+	user-select: none;
+	z-index: 1;
 }

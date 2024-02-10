@@ -1,0 +1,44 @@
+@font-face {
+	font-family: "NFPixels";
+	src: url("/fonts/NFPixels/NFPixels-Regular.ttf") format("truetype");
+	src: url("/fonts/NFPixels/NFPixels-Regular.otf") format("opentype");
+}
+
+body,
+html {
+	margin: 0;
+	padding: 0;
+	font-family: "NFPixels", sans-serif;
+	background-color: black;
+	color: #CBCBCB;
+	text-shadow: black 0 2px;
+}
+
+/* The animation code */
+@keyframes noita-decoration-9piece0-open {
+	from {outline-offset: -10px; opacity: 0.0;}
+	75% {outline-offset: 2px; opacity: 1;}
+	to {opacity: 1;}
+}
+
+/* A recreation of the decorative frame that is used for showing wand info or settings in Noita */
+.noita-decoration-9piece0 {
+	outline: 2px solid #937F64;
+	background-color: #000000D4;
+	margin: 2px;
+	padding: 5px;
+	border-top-right-radius: 2px;
+	border-bottom-left-radius: 2px;
+	transition: transform 0.05s ease-out;
+	animation: noita-decoration-9piece0-open 0.3s;
+}
+
+.noita-decoration-9piece0.noita-active {
+	outline: 2px solid #C88830;
+	background-color: #0E0D0CF2;
+	outline-offset: 2px;
+}
+
+.noita-decoration-9piece0.noita-hoverable:hover {
+	transform: translateX(4px);
+}

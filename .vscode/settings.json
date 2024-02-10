@@ -3,7 +3,11 @@
         "Dadido3",
         "mapcap",
         "Noita",
+        "noitabeta",
         "openseadragon",
-        "Seadragon"
-    ]
+        "Seadragon",
+        "Vogel"
+    ],
+    "licenser.license": "GPLv3",
+    "licenser.projectName": "noita-mapcap-openseadragon"
 }

@@ -5,35 +5,22 @@
 	<meta charset="utf-8">
 	<title>Noita World</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+	<link rel="stylesheet" href="css/noita.css">
 	<link rel="stylesheet" href="css/overlay-styles.css">
 	<link rel="stylesheet" href="css/style.css">
-	<link rel="icon" href="favicon.ico" type="image/x-icon">
+	<!-- <link rel="icon" href="favicon.ico" type="image/x-icon"> -->
 	<script src="vendor/openseadragon-bin-4.1.0/openseadragon.min.js"></script>
+	<script src="js/domsync.js"></script>
 </head>
 
 <body>
-	<div id="menu-container">
-		<div class="select-grid">
-			<label for="build">Build:</label>
-			<select name="build" id="build-selector"></select>
-
-			<label for="capture">Capture:</label>
-			<select name="capture" id="capture-selector"></select>
-		</div>
-
-		<div class="coordinate-grid">
-			<span>Pixel:</span>
-			<span>X: <span id="coordinate-pixel-x"></span></span>
-			<span>Y: <span id="coordinate-pixel-y"></span></span>
-		</div>
-		<div class="coordinate-grid">
-			<span>Chunk:</span>
-			<span>X: <span id="coordinate-chunk-x"></span></span>
-			<span>Y: <span id="coordinate-chunk-y"></span></span>
+	<div id="osd-container">
+		<div id="coordinates-hover"></div>
+		<div id="menu-container">
+			<div id="captures-list">
+			</div>
 		</div>
 	</div>
-
-	<div id="osd-container"></div>
 
 	<script src="js/script.js"></script>
 	<script src="js/captures.js"></script>
