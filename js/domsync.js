@@ -18,12 +18,6 @@
 // Collection of simple helpers for doing data binding between DOM and JS objects.
 
 /**
- * @typedef {Object} DomSyncBla
- * @extends Element
- * @property {any} domSyncKey
- */
-
-/**
  * DomSyncList helps to update the children of some DOM node with the content of srcList.
  * This is done by intelligently inserting, removing, rearranging or updating DOM nodes inside dstContainer.
  * @template A

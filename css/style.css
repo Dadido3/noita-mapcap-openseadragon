@@ -24,7 +24,7 @@ body {
 	user-select: none;
 }
 
-#top-menu {
+#menu-toolbar {
 	display: flex;
 	flex-direction: row;
 	gap: 0px;
@@ -32,7 +32,7 @@ body {
 	/*pointer-events: auto;*/
 }
 
-#top-menu > div {
+#menu-toolbar > div {
 	pointer-events: auto;
 }
 
