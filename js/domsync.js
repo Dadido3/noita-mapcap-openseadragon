@@ -18,14 +18,20 @@
 // Collection of simple helpers for doing data binding between DOM and JS objects.
 
 /**
+ * @typedef {Object} DomSyncBla
+ * @extends Element
+ * @property {any} domSyncKey
+ */
+
+/**
  * DomSyncList helps to update the children of some DOM node with the content of srcList.
  * This is done by intelligently inserting, removing, rearranging or updating DOM nodes inside dstContainer.
  * @template A
- * @param {A[]} srcList // A list of some object.
- * @param {HTMLElement} dstContainer // The destination DOM node which's content should be updated.
- * @param {string} tagName // The tag name of all child nodes.
- * @param {function (A): any} keyFunc // A function that returns a unique key for every srcList entry.
- * @param {function (A, Element)} updateFunc // A function that updates a DOM element for some srcList entry.
+ * @param {A[]} srcList A list of some object.
+ * @param {HTMLElement} dstContainer The destination DOM node which's content should be updated.
+ * @param {string} tagName The tag name of all child nodes.
+ * @param {function (A): any} keyFunc A function that returns a unique key for every srcList entry.
+ * @param {function (A, HTMLElement): void} updateFunc A function that updates a DOM element for some srcList entry.
  */
 function DomSyncList(srcList, dstContainer, tagName, keyFunc, updateFunc) {
 	const keyProperty = "domSyncKey";
@@ -35,14 +41,15 @@ function DomSyncList(srcList, dstContainer, tagName, keyFunc, updateFunc) {
 	for (const [i, srcEntry] of srcList.entries()) {
 		const key = keyFunc(srcEntry);
 		const dstElement = dstContainer.children[i];
-		if (dstElement !== undefined && dstElement[keyProperty] === key) {
+		if (dstElement instanceof HTMLElement && /** @type {HTMLElement & {[keyProperty]: any}}} */(dstElement)[keyProperty] === key) {
 			// The element keys are the same, we just have to update it.
 			updateFunc(srcEntry, dstElement);
 		} else {
-			// The element keys are not the same, we have to try to find the key in dst.
+			// The element keys are not the same, or it's a completely different type altogether.
+			// We have to try to find the key in dst.
 			let found = false;
 			for (const dstElement2 of dstContainer.children) {
-				if (dstElement2[keyProperty] === key) {
+				if (dstElement instanceof HTMLElement && /** @type {HTMLElement & {[keyProperty]: any}}} */(dstElement2)[keyProperty] === key) {
 					// We have found it, so we just have to rearrange and update it.
 					dstElement.before(dstElement2);
 					updateFunc(srcEntry, dstElement);
@@ -52,8 +59,8 @@ function DomSyncList(srcList, dstContainer, tagName, keyFunc, updateFunc) {
 			}
 			if (!found) {
 				// We have not found a pair with the same keys, so create and insert it manually.
-				const newElement = document.createElement("div");
-				newElement[keyProperty] = keyFunc(srcEntry);
+				const newElement = document.createElement(tagName);
+				/** @type {HTMLElement & {[keyProperty]: any}}} */(newElement)[keyProperty] = keyFunc(srcEntry);
 				if (dstElement === undefined) {
 					dstContainer.append(newElement);
 				} else {
@@ -66,6 +73,9 @@ function DomSyncList(srcList, dstContainer, tagName, keyFunc, updateFunc) {
 
 	// As last step we need to remove any additional elements in dst.
 	while (srcList.length < dstContainer.children.length) {
+		if (!dstContainer.lastElementChild) {
+			return;
+		}
 		dstContainer.lastElementChild.remove();
 	}
 }

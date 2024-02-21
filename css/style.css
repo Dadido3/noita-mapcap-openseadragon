@@ -12,19 +12,39 @@ body {
 
 #menu-container {
 	position: absolute;
-	top: 50px;
+	display: flex !important; /* Why the hell does OSD override the display type?*/
+	flex-direction: column;
+	gap: 0px;
+	top: 0px;
 	left: 0px;
 	bottom: 0px;
-	padding: 1em;
-	z-index: 1;
+	padding: 0 !important; /* Why the hell does OSD set a padding of zero on any embedded control?*/
+	/*z-index: 1;*/
 	pointer-events: none;
+	user-select: none;
+}
+
+#top-menu {
+	display: flex;
+	flex-direction: row;
+	gap: 0px;
+	padding: 12px;
+	/*pointer-events: auto;*/
+}
+
+#top-menu > div {
+	pointer-events: auto;
 }
 
 #captures-list {
 	display: flex;
 	flex-direction: column;
+	overflow-y: auto;
+	overflow-x: visible;
+	pointer-events: auto;
+	padding: 12px;
+	padding-left: 24px;
 	gap: 4px;
-	user-select: none;
 }
 
 #captures-list > div {
@@ -42,5 +62,20 @@ body {
 	position: absolute;
 	pointer-events: none;
 	user-select: none;
-	z-index: 1;
+}
+
+.tooltip {
+	visibility: hidden;
+	position: absolute;
+	margin-left: 8px;
+	z-index: 10;
+}
+
+*:hover > .tooltip {
+	visibility: visible;
+	pointer-events: none;
+}
+
+*:not(:hover) > .tooltip {
+	animation-name: none;
 }

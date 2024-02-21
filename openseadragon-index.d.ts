@@ -16,6 +16,12 @@ declare namespace OpenSeadragon {
         CHROMEEDGE = 7,
     }
 
+    enum SUBPIXEL_ROUNDING_OCCURRENCES {
+        NEVER =        0,
+        ONLY_AT_REST = 1,
+        ALWAYS =       2,
+    }
+
     enum ButtonState {
         REST,
         GROUP,
@@ -384,6 +390,7 @@ declare namespace OpenSeadragon {
         loadTilesWithAjax?: boolean | undefined;
         ajaxHeaders?: object | undefined;
         imageSmoothingEnabled?: boolean | undefined;
+        subPixelRoundingForTransparency?: SUBPIXEL_ROUNDING_OCCURRENCES;
         rotationIncrement?: number | undefined;
     }
 
@@ -591,39 +598,37 @@ declare namespace OpenSeadragon {
 
     interface MouseTrackerOptions {
         element: Element | string;
-        startDisabled?: boolean | undefined;
-        clickTimeThreshold?: number | undefined;
-        clickDistThreshold?: number | undefined;
-        dblClickTimeThreshold?: number | undefined;
-        dblClickDistThreshold?: number | undefined;
-        stopDelay?: number | undefined;
-        preProcessEventHandler?: PreprocessEventHandler | undefined;
-        contextMenuHandler?: EventHandler<ContextMenuMouseTrackerEvent> | undefined;
-        enterHandler?: EventHandler<MouseTrackerEvent> | undefined;
-        /**
-         * @deprecated use leaveHandler instead
-         */
-        exitHandler?: EventHandler<MouseTrackerEvent> | undefined;
-        leaveHandler?: EventHandler<MouseTrackerEvent> | undefined;
-        overHandler?: EventHandler<MouseTrackerEvent> | undefined;
-        outHandler?: EventHandler<MouseTrackerEvent> | undefined;
-        pressHandler?: EventHandler<PressMouseTrackerEvent> | undefined;
-        nonPrimaryPressHandler?: EventHandler<MouseTrackerEvent> | undefined;
-        releaseHandler?: EventHandler<MouseTrackerEvent> | undefined;
-        nonPrimaryReleaseHandler?: EventHandler<MouseTrackerEvent> | undefined;
-        moveHandler?: EventHandler<MouseTrackerEvent> | undefined;
-        scrollHandler?: EventHandler<MouseTrackerEvent> | undefined;
-        clickHandler?: EventHandler<MouseTrackerEvent> | undefined;
-        dblClickHandler?: EventHandler<MouseTrackerEvent> | undefined;
-        dragHandler?: EventHandler<MouseTrackerEvent> | undefined;
-        dragEndHandler?: EventHandler<MouseTrackerEvent> | undefined;
-        pinchHandler?: EventHandler<MouseTrackerEvent> | undefined;
-        keyDownHandler?: EventHandler<MouseTrackerEvent> | undefined;
-        keyUpHandler?: EventHandler<MouseTrackerEvent> | undefined;
-        keyHandler?: EventHandler<MouseTrackerEvent> | undefined;
-        focusHandler?: EventHandler<MouseTrackerEvent> | undefined;
-        blurHandler?: EventHandler<MouseTrackerEvent> | undefined;
-        userData?: object | undefined;
+        startDisabled?: boolean;
+        clickTimeThreshold?: number;
+        clickDistThreshold?: number;
+        dblClickTimeThreshold?: number;
+        dblClickDistThreshold?: number;
+        stopDelay?: number;
+        preProcessEventHandler?: PreprocessEventHandler;
+        contextMenuHandler?: EventHandler<ContextMenuMouseTrackerEvent>;
+        enterHandler?: EventHandler<PointerMouseTrackerEvent>;
+        /** @deprecated use leaveHandler instead */
+        exitHandler?: EventHandler<PointerMouseTrackerEvent>;
+        leaveHandler?: EventHandler<PointerMouseTrackerEvent>;
+        overHandler?: EventHandler<PointerMouseTrackerEvent>;
+        outHandler?: EventHandler<PointerMouseTrackerEvent>;
+        pressHandler?: EventHandler<PressMouseTrackerEvent>;
+        nonPrimaryPressHandler?: EventHandler<PointerMouseTrackerEvent>;
+        releaseHandler?: EventHandler<PointerMouseTrackerEvent>;
+        nonPrimaryReleaseHandler?: EventHandler<PointerMouseTrackerEvent>;
+        moveHandler?: EventHandler<PointerMouseTrackerEvent>;
+        scrollHandler?: EventHandler<PointerMouseTrackerEvent>;
+        clickHandler?: EventHandler<PointerMouseTrackerEvent>;
+        dblClickHandler?: EventHandler<PointerMouseTrackerEvent>;
+        dragHandler?: EventHandler<PointerMouseTrackerEvent>;
+        dragEndHandler?: EventHandler<PointerMouseTrackerEvent>;
+        pinchHandler?: EventHandler<PointerMouseTrackerEvent>;
+        keyDownHandler?: EventHandler<KeyMouseTrackerEvent>;
+        keyUpHandler?: EventHandler<KeyMouseTrackerEvent>;
+        keyHandler?: EventHandler<KeyMouseTrackerEvent>;
+        focusHandler?: EventHandler<MouseTrackerEvent>;
+        blurHandler?: EventHandler<MouseTrackerEvent>;
+        userData?: object;
     }
 
     class MouseTracker {
@@ -636,36 +641,34 @@ declare namespace OpenSeadragon {
         constructor(options: MouseTrackerOptions);
 
         blurHandler: EventHandler<MouseTrackerEvent>;
-        clickHandler: EventHandler<MouseTrackerEvent>;
+        clickHandler: EventHandler<PointerMouseTrackerEvent>;
         contextMenuHandler: EventHandler<ContextMenuMouseTrackerEvent>;
-        dblClickHandler: EventHandler<MouseTrackerEvent>;
+        dblClickHandler: EventHandler<PointerMouseTrackerEvent>;
         destroy(): void;
-        dragEndHandler: EventHandler<MouseTrackerEvent>;
-        dragHandler: EventHandler<MouseTrackerEvent>;
-        enterHandler: EventHandler<MouseTrackerEvent>;
-        /**
-         * @deprecated use leaveHandler instead
-         */
-        exitHandler: EventHandler<MouseTrackerEvent>;
-        leaveHandler: EventHandler<MouseTrackerEvent>;
+        dragEndHandler: EventHandler<PointerMouseTrackerEvent>;
+        dragHandler: EventHandler<PointerMouseTrackerEvent>;
+        enterHandler: EventHandler<PointerMouseTrackerEvent>;
+        /** @deprecated use leaveHandler instead */
+        exitHandler: EventHandler<PointerMouseTrackerEvent>;
+        leaveHandler: EventHandler<PointerMouseTrackerEvent>;
         focusHandler: EventHandler<MouseTrackerEvent>;
         getActivePointerCount(): number;
         getActivePointersListByType(type: string): GesturePointList;
         keyDownHandler: EventHandler<KeyMouseTrackerEvent>;
         keyHandler: EventHandler<KeyMouseTrackerEvent>;
         keyUpHandler: EventHandler<KeyMouseTrackerEvent>;
-        moveHandler: EventHandler<MouseTrackerEvent>;
-        nonPrimaryPressHandler: EventHandler<MouseTrackerEvent>;
-        nonPrimaryReleaseHandler: EventHandler<MouseTrackerEvent>;
-        overHandler: EventHandler<MouseTrackerEvent>;
-        outHandler: EventHandler<MouseTrackerEvent>;
-        pinchHandler: EventHandler<MouseTrackerEvent>;
+        moveHandler: EventHandler<PointerMouseTrackerEvent>;
+        nonPrimaryPressHandler: EventHandler<PointerMouseTrackerEvent>;
+        nonPrimaryReleaseHandler: EventHandler<PointerMouseTrackerEvent>;
+        overHandler: EventHandler<PointerMouseTrackerEvent>;
+        outHandler: EventHandler<PointerMouseTrackerEvent>;
+        pinchHandler: EventHandler<PointerMouseTrackerEvent>;
         pressHandler: EventHandler<PressMouseTrackerEvent>;
         preProcessEventHandler: PreprocessEventHandler;
-        releaseHandler: EventHandler<MouseTrackerEvent>;
-        scrollHandler: EventHandler<MouseTrackerEvent>;
+        releaseHandler: EventHandler<PointerMouseTrackerEvent>;
+        scrollHandler: EventHandler<PointerMouseTrackerEvent>;
         setTracking(track: boolean): MouseTracker;
-        stopHandler: EventHandler<MouseTrackerEvent>;
+        stopHandler: EventHandler<PointerMouseTrackerEvent>;
     }
 
     interface EventProcessInfo {

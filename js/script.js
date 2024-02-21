@@ -1,9 +1,10 @@
+const osdContainer = document.getElementById("osd-container")
+
 const osdViewer = OpenSeadragon({
 	id: "osd-container",
 	prefixUrl: "vendor/openseadragon-bin-4.1.0/images/",
-	//minZoomLevel: 0,
-	//maxZoomLevel: 100,
 	maxZoomPixelRatio: 20,
+	showNavigationControl: false,
 	defaultZoomLevel: 0,
 	showNavigator: true,
 	navigatorPosition: "BOTTOM_RIGHT",
@@ -12,15 +13,13 @@ const osdViewer = OpenSeadragon({
 	navigatorWidth: 200,
 	imageSmoothingEnabled: false,
 	subPixelRoundingForTransparency: OpenSeadragon.SUBPIXEL_ROUNDING_OCCURRENCES.ALWAYS,
+	gestureSettingsMouse: {clickToZoom: false},
 	smoothTileEdgesMinZoom: 1,
 	minScrollDeltaTime: 10,
 	springStiffness: 50,
 	preserveViewport: true,
 	imageLoaderLimit: 1,
 });
-
-// Disable click to zoom
-osdViewer.gestureSettingsMouse.clickToZoom = false;
 
 /*let rasterPattern = [{"id":"1","raster_id":"1","label":"Rij 1","top":"620","left":"420","width":"5350","height":"200"},{"id":"19","raster_id":"1","label":"Rij 19","top":"4105","left":"420","width":"5350","height":"200"},{"id":"20","raster_id":"1","label":"Rij 20","top":"4105","left":"420","width":"5350","height":"200"}];
 osdViewer.addHandler('open',function(){
@@ -76,50 +75,35 @@ osdViewer.addHandler('open',function(){
 	}
 }, rasterPattern);*/
 
-{
-	const e = document.createElement("div");
-	e.className = "overlay-highlight";
-	osdViewer.addOverlay({
-		element: e,
-		location: new OpenSeadragon.Rect(3 * 512, 1 * 512, 512, 512)
-	});
-}
-
-{
-	const e = document.createElement("div");
-	e.className = "overlay-highlight";
-	e.innerHTML = `<span>The Work (Sky)</span>`;
-	osdViewer.addOverlay({
-		element: e,
-		location: new OpenSeadragon.Rect(1 * 512, -3 * 512, 512, 512)
-	});
-}
-
 // Update hover element that shows the world coordinates near the mouse cursor.
-const coordinatesHover = document.getElementById("coordinates-hover");
+const uiCoordinatesHover = document.createElement("div");
+uiCoordinatesHover.id = "coordinates-hover";
+osdViewer.addControl(uiCoordinatesHover, {})
+
 const mouseTracker = new OpenSeadragon.MouseTracker({
-	element: document.getElementById("osd-container"),
-	moveHandler: function (event) {
+	// @ts-ignore
+	element: osdContainer,
+	moveHandler: (event) => {
 		if (event.pointerType != "mouse") { return }
 		const webPoint = event.position;
 		const viewportPoint = osdViewer.viewport.pointFromPixel(webPoint);
 
 		const pixelX = Math.floor(viewportPoint.x).toString();
 		const pixelY = Math.floor(viewportPoint.y).toString();
-		const chunkX = Math.floor(pixelX / 512).toString();
-		const chunkY = Math.floor(pixelY / 512).toString();
-		coordinatesHover.innerHTML = `<span>(${pixelX}, ${pixelY})</span><br><span>(${chunkX}, ${chunkY})</span>`;
+		const chunkX = Math.floor(viewportPoint.x / 512).toString();
+		const chunkY = Math.floor(viewportPoint.y / 512).toString();
+		uiCoordinatesHover.innerHTML = `<span>(${pixelX}, ${pixelY})</span><br><span>(${chunkX}, ${chunkY})</span>`;
 
-		coordinatesHover.style.left = `${webPoint.x}px`;
-		coordinatesHover.style.top = `calc(${webPoint.y}px + 1em)`;
+		uiCoordinatesHover.style.left = `${webPoint.x}px`;
+		uiCoordinatesHover.style.top = `calc(${webPoint.y}px + 1em)`;
 	},
-	enterHandler: function onMouseTrackerMove(event) {
+	enterHandler: (event) => {
 		if (event.pointerType != "mouse") { return }
-		coordinatesHover.style.visibility = "visible";
+		uiCoordinatesHover.style.visibility = "visible";
 	},
-	leaveHandler: function onMouseTrackerMove(event) {
+	leaveHandler: (event) => {
 		if (event.pointerType != "mouse") { return }
-		coordinatesHover.style.visibility = "hidden";
+		uiCoordinatesHover.style.visibility = "hidden";
 	},
 }).setTracking(true);
 
@@ -138,7 +122,7 @@ const mouseTracker = new OpenSeadragon.MouseTracker({
 	}
 	osdViewer.viewport.fitBounds(bounds, true);
 }
-osdViewer.addHandler("animation-finish", function (event) {
+osdViewer.addHandler("animation-finish", (event) => {
 	// Update URL parameter.
 	const bounds = event.eventSource.viewport.getBounds();
 	const urlParams = new URLSearchParams(window.location.search);
@@ -146,7 +130,7 @@ osdViewer.addHandler("animation-finish", function (event) {
 	urlParams.set("y", bounds.y.toFixed(0));
 	urlParams.set("width", bounds.width.toFixed(0));
 	urlParams.set("height", bounds.height.toFixed(0));
-	window.history.replaceState(null, null, "?" + urlParams.toString());
+	window.history.replaceState(null, "", "?" + urlParams.toString());
 });
 
 // Get additional DZI information from every loaded TiledImage.
