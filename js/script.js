@@ -148,3 +148,13 @@ osdViewer.addHandler("animation-finish", function (event) {
 	urlParams.set("height", bounds.height.toFixed(0));
 	window.history.replaceState(null, null, "?" + urlParams.toString());
 });
+
+// Get additional DZI information from every loaded TiledImage.
+// This is used to place images in a way so that the OSD coordinate system aligns with the in-game coordinate system.
+osdViewer.world.addHandler('add-item', (event) => {
+	/** @type {{Format: string, Overlap: string, Size: {Width: string, Height: string}, TileSize: string, TopLeft: {X: string, Y: string}}} */
+	// @ts-ignore
+	const image = event.item.source.Image;
+	event.item.setPosition(new OpenSeadragon.Point(Number(image.TopLeft.X), Number(image.TopLeft.Y)), true);
+	event.item.setWidth(Number(image.Size.Width), true);
+});
