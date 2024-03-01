@@ -24,7 +24,7 @@
  * @property {"Steam"} platform The used game distribution platform.
  * @property {"main"|"noitabeta"} branch Which branch this build is on.
  * @property {"noita.exe"|"noita_dev.exe"} executable Which Noita executable the capture was made with.
- * @property {"New Game"|"Nightmare"|"Daily Run"|"Purgatory"} gameMode The game-mode of the capture.
+ * @property {"Normal"|"Nightmare"|"Daily Run"|"Purgatory"} gameMode The game-mode of the capture.
  * @property {number} seed The seed that was used for the capture. Must be an integer.
  * @property {number} ngPlusLevel How many times the world was "restarted". A new game starts at 1. Must be an integer.
  * @property {Date} createdAt Point in time when this capture was created.
@@ -37,7 +37,7 @@
  */
 class NoitaMap {
 	/** The standard side length of a Noita chunk. */
-	static get NOITA_CHUNK_SIZE() {return 512};
+	static get NOITA_CHUNK_SIZE() { return 512 };
 
 	/** @type {OpenSeadragon.Viewer} */
 	#osdViewer;
@@ -165,25 +165,25 @@ class NoitaMap {
 			uiMenuContainer.appendChild(uiTopMenu);
 			uiTopMenu.id = "menu-toolbar"; // TODO: Rename to toolbar or something
 			{
-				const uiToolbarGroup = NoitaMap.#uiCreateToolbar();
+				const uiToolbarGroup = NoitaMap.#uiCreateInventoryBar();
 				uiTopMenu.appendChild(uiToolbarGroup);
 				{
-					const uiButton = NoitaMap.#uiCreateButton("img/plus.png");
+					const uiButton = NoitaMap.#uiCreateNoitaInventoryBarItem("img/plus.png");
 					uiToolbarGroup.appendChild(uiButton);
 					uiButton.onclick = () => { this.#osdViewer.viewport.zoomBy(2) };
 				}
 				{
-					const uiButton = NoitaMap.#uiCreateButton("img/minus.png");
+					const uiButton = NoitaMap.#uiCreateNoitaInventoryBarItem("img/minus.png");
 					uiToolbarGroup.appendChild(uiButton);
 					uiButton.onclick = () => { this.#osdViewer.viewport.zoomBy(1 / 2) };
 				}
 				{
-					const uiButton = NoitaMap.#uiCreateButton("img/home.png", "Reset view");
+					const uiButton = NoitaMap.#uiCreateNoitaInventoryBarItem("img/home.png", "Reset view");
 					uiToolbarGroup.appendChild(uiButton);
 					uiButton.onclick = () => { this.#osdViewer.viewport.fitBounds(new OpenSeadragon.Rect(-150, -350, 1024, 512)); };
 				}
 				{
-					const uiButton = NoitaMap.#uiCreateButton("img/enlarge.png", "Toggle fullscreen");
+					const uiButton = NoitaMap.#uiCreateNoitaInventoryBarItem("img/enlarge.png", "Toggle fullscreen");
 					uiToolbarGroup.appendChild(uiButton);
 					uiButton.onclick = () => {
 						const newState = !this.#osdViewer.isFullPage();
@@ -197,14 +197,14 @@ class NoitaMap {
 				}
 			}
 			{
-				const uiToolbarGroup = NoitaMap.#uiCreateToolbar();
+				const uiToolbarGroup = NoitaMap.#uiCreateInventoryBar();
 				uiTopMenu.appendChild(uiToolbarGroup);
 				{
-					const uiButton = NoitaMap.#uiCreateButton("img/map.png", "Toggle overlays");
+					const uiButton = NoitaMap.#uiCreateNoitaInventoryBarItem("img/map.png", "Toggle overlays");
 					uiToolbarGroup.appendChild(uiButton);
 				}
 				{
-					const uiButton = NoitaMap.#uiCreateButton("img/book.png", "Toggle list");
+					const uiButton = NoitaMap.#uiCreateNoitaInventoryBarItem("img/book.png", "Toggle list");
 					uiToolbarGroup.appendChild(uiButton);
 					uiButton.onclick = () => {
 						if (this.#uiCapturesList.style.display === "none") {
@@ -277,12 +277,13 @@ class NoitaMap {
 	}
 
 	/**
-	 * Creates a simple button in the style of a Noita inventory item.
+	 * Creates a simple Noita inventory item, to be placed inside an inventory bar.
+	 * Can be used as button.
 	 * @param {string} iconPath Path to the icon to use. Should be 16x16 pixels.
 	 * @param {string} [tooltipText] Text that is shown when the mouse is hovering over the button.
 	 * @returns {HTMLDivElement}
 	 */
-	static #uiCreateButton(iconPath, tooltipText) {
+	static #uiCreateNoitaInventoryBarItem(iconPath, tooltipText) {
 		const elem = document.createElement("div");
 		elem.classList.add("noita-inventory-box");
 
@@ -305,7 +306,7 @@ class NoitaMap {
 	 * Creates a simple toolbar in the style of the Noita inventory bar.
 	 * @returns {HTMLDivElement}
 	 */
-	static #uiCreateToolbar() {
+	static #uiCreateInventoryBar() {
 		const elem = document.createElement("div");
 		elem.classList.add("noita-inventory-group-invisible");
 		return elem
@@ -317,13 +318,45 @@ class NoitaMap {
 	*/
 	#uiUpdateCapturesList() {
 		DomSyncList(noitaCaptures, this.#uiCapturesList, "div", (entry) => entry.uniqueID, (entry, node) => {
-			node.classList.add("noita-decoration-9piece0", "noita-hoverable");
+			node.classList.add("noita-decoration-9piece0", "noita-hoverable", "captures-list-entry");
 			if (entry.uniqueID === this.#activeCaptureID) {
 				node.classList.add("noita-active");
 			} else {
 				node.classList.remove("noita-active");
 			}
-			node.innerHTML = `<span>${entry.name}</span><br><span>${entry.seed}</span>`;
+			node.textContent = "";
+			{
+				const img = document.createElement("img");
+				node.appendChild(img);
+				img.className = "captures-list-entry-image";
+				switch (entry.gameMode) {
+					case "Normal": img.src = "img/gamemode-normal.png"; img.width = 31 * 2; break;
+					case "Daily Run": img.src = "img/gamemode-dailyrun.png"; img.width = 26 * 2; break;
+					case "Nightmare": img.src = "img/gamemode-nightmare.png"; img.width = 36 * 2; break;
+					case "Purgatory": img.src = "img/gamemode-purgatory.png"; img.width = 46 * 2; break;
+					default: img.src = "img/gamemode-unknown.png"; img.width = 38 * 2; break;
+				}
+			}
+			{
+				const details = document.createElement("div");
+				node.appendChild(details);
+				details.className = "captures-list-entry-description";
+				details.innerHTML = [
+					`<span>Gamemode</span><span>${entry.gameMode}</span>`,
+					`<span>Branch</span><span>${entry.branch}</span>`,
+					`<span>Build</span><span>${entry.builtAt?.toLocaleDateString()}</span>`,
+				].join("");
+			}
+			/*{
+				const bar = NoitaMap.#uiCreateInventoryBar();
+				node.appendChild(bar);
+				bar.className = "captures-list-entry-bar";
+				if (entry.branch == "noitabeta") {
+					const item = NoitaMap.#uiCreateNoitaInventoryBarItem("img/beta.png", "Beta branch");
+					bar.appendChild(item);
+				}
+			}*/
+
 			node.onclick = () => { this.activeCaptureID = entry.uniqueID };
 		});
 	}

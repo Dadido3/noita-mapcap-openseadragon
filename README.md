@@ -13,6 +13,6 @@ You can self host this somewhere, and use it to view/show map captures that you 
 
 2. Copy the generated `output.dzi` and the `output_files` directory into [maps/](maps/). Resulting in the following paths `maps/output.dzi` and `maps/output_files/0/...`.
 
-3. Add a new entry to `builds` in [js/captures.js](js/script.js) pointing towards your newly added `maps/output.dzi`.
+3. Add a new entry to `noitaCaptures` in [js/captures.js](js/script.js) pointing towards your newly added `maps/output.dzi`.
 
 4. Upload all the files to some web server. No PHP or any other fancy stuff is required.
