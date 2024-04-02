@@ -79,11 +79,30 @@ body {
 	user-select: none;
 }
 
+#overlay-object-info {
+	position: fixed;
+	z-index: 1;
+	right: 0;
+	top: 0;
+	overflow: auto;
+	display: flex !important;
+	flex-direction: column;
+	padding: 24px !important;
+	pointer-events: none;
+}
+
+#overlay-object-info > div {
+	pointer-events: auto;
+}
+
 .tooltip {
 	visibility: hidden;
 	position: absolute;
 	margin-left: 8px;
+	max-width: 200px;
 	z-index: 10;
+	width: max-content;
+	/*display: table;*/
 }
 
 *:hover > .tooltip {

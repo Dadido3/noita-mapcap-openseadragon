@@ -18,5 +18,5 @@
 // Create NoitaMap instance.
 const container = document.getElementById("osd-container");
 if (container) {
-	new NoitaMap(container, noitaCaptures);
+	new NoitaMap(container, noitaCaptures, noitaOverlayObjects);
 }

@@ -16,6 +16,11 @@
 // along with noita-mapcap-openseadragon.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * @typedef {string} Overlay_Object_Group
+ * 
+ */
+
+/**
  * @typedef {Object} Map_Capture
  * @property {string} uniqueID The unique ID of the capture.
  * @property {string} name The name of the capture.
@@ -30,6 +35,21 @@
  * @property {Date} createdAt Point in time when this capture was created.
  * @property {string} createdBy Name or nickname of the person that created this capture.
  * @property {string} tileSource Path to the DZI file.
+ * @property {Overlay_Object_Group[]} overlayGroups List of overlay groups to show.
+ */
+
+/**
+ * @typedef {Object} Overlay_Object
+ * @property {string} uniqueID The unique ID of the overlay.
+ * @property {string} name The name of the overlay.
+ * @property {Overlay_Object_Group[]} overlayGroups List of groups that this overlay object is part of. This is used to associate overlay objects with map captures.
+ * @property {Date} createdAt Point in time when this overlay object was created.
+ * @property {Date} updatedAt Point in time when this overlay object was updated.
+ * @property {string[]} authoredBy Name or nickname of the persons that created/updated this overlay.
+ * @property {OpenSeadragon.Rect|OpenSeadragon.Point} location Place of this object as OSD Rect coordinates. This is in world coordinates.
+ * @property {OpenSeadragon.Placement|undefined} placement How to place the overlay at the given location.
+ * @property {HTMLElement} viewportElement HTML element that is shown in the world viewport.
+ * @property {string[]} modalHTML HTML that is shown when an overlay object is selected/active.
  */
 
 /**
@@ -42,17 +62,33 @@ class NoitaMap {
 	/** @type {OpenSeadragon.Viewer} */
 	#osdViewer;
 
-	/** @type {string} The uniqueID of the currently active capture. */
-	#activeCaptureID;
-
 	/** @type {HTMLDivElement} The HTML element that shows the list of available captures. */
 	#uiCapturesList;
+
+	/** @type {HTMLDivElement} The HTML element that shows info about the currently selected overlay object. */
+	#uiActiveOverlayObjectInfo;
+
+	/** @type {Map_Capture[]} List of all captures. */
+	#captures;
+
+	/** @type {Map_Capture} The currently active capture. */
+	#activeCapture;
+
+	/** @type {Overlay_Object[]} List of all overlay objects. */
+	#overlayObjects;
+
+	/** @type {Overlay_Object?} The currently active/selected overlay object. */
+	#activeOverlayObject;
+
+	/** @type {boolean} True when we should show the overlays. */
+	#overlayEnabled;
 
 	/**
 	 * @param {Element} container A HTML container that the viewer will be rendered in.
 	 * @param {Map_Capture[]} captures List of map captures.
+	 * @param {Overlay_Object[]} overlayObjects List of overlay objects.
 	 */
-	constructor(container, captures) {
+	constructor(container, captures, overlayObjects) {
 		this.#osdViewer = OpenSeadragon({
 			id: container.id,
 			prefixUrl: "vendor/openseadragon-bin-4.1.0/images/",
@@ -136,23 +172,31 @@ class NoitaMap {
 		// This is used to place images in a way so that the OSD coordinate system aligns with the in-game coordinate system.
 		this.#osdViewer.world.addHandler('add-item', (event) => {
 			/** @type {{Format: string, Overlap: string, Size: {Width: string, Height: string}, TileSize: string, TopLeft: {X: string, Y: string}}} */
-			// @ts-ignore
+			// @ts-ignore: Image exists, openseadragon-index.d.ts is not up to date
 			const image = event.item.source.Image;
 			event.item.setPosition(new OpenSeadragon.Point(Number(image.TopLeft.X), Number(image.TopLeft.Y)), true);
 			event.item.setWidth(Number(image.Size.Width), true);
 		});
 
-		// The unique ID of the currently shown/active capture.
+		// Set first map capture as default/fallback.
+		if (captures[0]) {
+			this.#activeCapture = captures[0];
+		} else {
+			throw new Error("Can't set default map capture. Ensure that you have passed a list of valid map captures.");
+		}
+
+		// Get some variables from the URL.
 		const urlParams = new URLSearchParams(window.location.search);
-		let activeCapture = urlParams.get("capture");
-		if (activeCapture) { this.#activeCaptureID = activeCapture; } else { this.#activeCaptureID = "6a0661b1-96bc-4a8d-94c2-b43d1f1c4cd9"; }
+		let activeCaptureID = urlParams.get("capture");
+		this.#overlayEnabled = urlParams.get("overlay") ? urlParams.get("overlay") === "1" : false;
 
 		// Load captures.
+		this.#captures = captures;
 		this.#osdViewer.world.removeAll();
 		for (const [index, capture] of captures.entries()) {
 			/** @type {OpenSeadragon.TiledImageOptions} */
 			const options = { tileSource: capture.tileSource, index: index };
-			if (capture.uniqueID !== this.#activeCaptureID) { options.opacity = 0; }
+			if (capture.uniqueID === activeCaptureID) { this.#activeCapture = capture; } else { options.opacity = 0; }
 			this.#osdViewer.addTiledImage(options);
 		}
 
@@ -202,6 +246,17 @@ class NoitaMap {
 				{
 					const uiButton = NoitaMap.#uiCreateNoitaInventoryBarItem("img/map.png", "Toggle overlays");
 					uiToolbarGroup.appendChild(uiButton);
+					if (this.overlayEnabled) {
+						uiButton.classList.add("noita-active");
+					}
+					uiButton.onclick = () => {
+						this.overlayEnabled = !this.overlayEnabled;
+						if (this.overlayEnabled) {
+							uiButton.classList.add("noita-active");
+						} else {
+							uiButton.classList.remove("noita-active");
+						}
+					};
 				}
 				{
 					const uiButton = NoitaMap.#uiCreateNoitaInventoryBarItem("img/book.png", "Toggle list");
@@ -228,28 +283,40 @@ class NoitaMap {
 		// Fill list of captures initially.
 		this.#uiUpdateCapturesList();
 
-		// Add some overlays for testing.
-		{
-			const overlay = document.createElement("div");
-			overlay.className = "overlay-highlight";
-			this.#osdViewer.addOverlay({
-				element: overlay,
-				location: new OpenSeadragon.Rect(3 * 512, 1 * 512, 512, 512)
+		// Generate overlay object info container.
+		this.#uiActiveOverlayObjectInfo = document.createElement("div");
+		this.#osdViewer.addControl(this.#uiActiveOverlayObjectInfo, {});
+		this.#uiActiveOverlayObjectInfo.id = "overlay-object-info";
+
+		// Prepare overlay objects.
+		this.#overlayObjects = overlayObjects;
+		this.#activeOverlayObject = null;
+		for (const overlayObject of overlayObjects) {
+			const noitaMap = this;
+			new OpenSeadragon.MouseTracker({
+				element: overlayObject.viewportElement,
+				clickHandler: (event) => {
+					// @ts-ignore: quick exists, openseadragon-index.d.ts is not up to date
+					if (event.quick) {
+						this.activeOverlayObject = overlayObject;
+					}
+				},
 			});
 		}
-		{
-			const e = document.createElement("div");
-			e.className = "overlay-highlight";
-			e.innerHTML = `<span>The Work (Sky)</span>`;
-			this.#osdViewer.addOverlay({
-				element: e,
-				location: new OpenSeadragon.Rect(1 * 512, -3 * 512, 512, 512)
-			});
-		}
+
+		// Deselect overlay objects when we click on the empty canvas.
+		this.#osdViewer.addHandler("canvas-click", (event) => {
+			if (event.quick) {
+				this.activeOverlayObject = null;
+			}
+		});
+
+		// Open overlays.
+		this.#uiUpdateOverlay();
 	}
 
 	get activeCaptureID() {
-		return this.#activeCaptureID
+		return this.#activeCapture.uniqueID
 	}
 
 	/**
@@ -257,22 +324,68 @@ class NoitaMap {
 	 * This will show and hide the needed tiled images.
 	 */
 	set activeCaptureID(uniqueID) {
-		this.#activeCaptureID = uniqueID;
-		this.#uiUpdateCapturesList();
-
-		// Update URL parameter.
-		const urlParams = new URLSearchParams(window.location.search);
-		urlParams.set("capture", uniqueID);
-		window.history.replaceState(null, "", "?" + urlParams.toString());
-
-		// Update opacity of all TiledImages.
-		for (const [index, capture] of noitaCaptures.entries()) {
+		for (const [index, capture] of this.#captures.entries()) {
 			const tiledImage = this.#osdViewer.world.getItemAt(index);
 			if (capture.uniqueID === uniqueID) {
+				this.#activeCapture = capture;
+				// Update URL parameter.
+				const urlParams = new URLSearchParams(window.location.search);
+				urlParams.set("capture", uniqueID);
+				window.history.replaceState(null, "", "?" + urlParams.toString());
+				this.#uiUpdateCapturesList();
+				this.#uiUpdateOverlay();
+				this.activeOverlayObject = this.activeOverlayObject; // Refresh the overlay selection.
+				// Update opacity of all TiledImages.
 				tiledImage.setOpacity(1);
 			} else {
+				// Update opacity of all TiledImages.
 				tiledImage.setOpacity(0);
 			}
+		}
+	}
+
+	get overlayEnabled() {
+		return this.#overlayEnabled
+	}
+
+	/**
+	 * Changes the overlay enabled state.
+	 * @param {boolean} state New state. Set to true to show overlays.
+	 */
+	set overlayEnabled(state) {
+		this.#overlayEnabled = state;
+		this.#uiUpdateOverlay();
+		this.activeOverlayObject = null; // Remove current overlay selection.
+		// Update URL parameter.
+		const urlParams = new URLSearchParams(window.location.search);
+		urlParams.set("overlay", state ? "1" : "0");
+		window.history.replaceState(null, "", "?" + urlParams.toString());
+	}
+
+	get activeOverlayObject() {
+		return this.#activeOverlayObject
+	}
+
+	/**
+	 * Changes the active overlay object to the given unique ID.
+	 */
+	set activeOverlayObject(overlayObject) {
+		// Clean up UI and remove selected class.
+		if (this.#activeOverlayObject) {this.#activeOverlayObject.viewportElement.classList.remove("overlay-selected");}
+		this.#uiActiveOverlayObjectInfo.replaceChildren();
+
+		if (overlayObject && !overlayObject.overlayGroups.some(group => this.#activeCapture.overlayGroups.includes(group))) {
+			return
+		}
+
+		// Update selected class and info box on the top right.
+		this.#activeOverlayObject = overlayObject;
+		if (this.#activeOverlayObject) {this.#activeOverlayObject.viewportElement.classList.add("overlay-selected");}
+		if (this.#activeOverlayObject) {
+			let container = document.createElement("div");
+			container.classList.add("noita-decoration-9piece0");
+			container.innerHTML = this.#activeOverlayObject.modalHTML.join("\n");
+			this.#uiActiveOverlayObjectInfo.appendChild(container);
 		}
 	}
 
@@ -317,9 +430,9 @@ class NoitaMap {
 	* @returns {void}
 	*/
 	#uiUpdateCapturesList() {
-		DomSyncList(noitaCaptures, this.#uiCapturesList, "div", (entry) => entry.uniqueID, (entry, node) => {
+		DomSyncList(this.#captures, this.#uiCapturesList, "div", (entry) => entry.uniqueID, (entry, node) => {
 			node.classList.add("noita-decoration-9piece0", "noita-hoverable", "captures-list-entry");
-			if (entry.uniqueID === this.#activeCaptureID) {
+			if (entry.uniqueID === this.#activeCapture.uniqueID) {
 				node.classList.add("noita-active");
 			} else {
 				node.classList.remove("noita-active");
@@ -359,6 +472,28 @@ class NoitaMap {
 
 			node.onclick = () => { this.activeCaptureID = entry.uniqueID };
 		});
+	}
+
+	/**
+	* Clears and readds all overlay objects that should be visible on the active capture.
+	* @returns {void}
+	*/
+	#uiUpdateOverlay() {
+		this.#osdViewer.clearOverlays();
+
+		// Exit early if overlays are disabled.
+		if (!this.overlayEnabled) { return; }
+
+		for (const overlayObject of this.#overlayObjects) {
+			// Check if we have at least one overlay group in common.
+			if (overlayObject.overlayGroups.some(group => this.#activeCapture.overlayGroups.includes(group))) {
+				this.#osdViewer.addOverlay({
+					element: overlayObject.viewportElement,
+					location: overlayObject.location,
+					placement: overlayObject.placement,
+				});
+			}
+		}
 	}
 
 }

@@ -39,6 +39,7 @@ const noitaCaptures = [
 		createdAt: new Date('2024-02-08T19:02:16+01:00'),
 		createdBy: "D3",
 		tileSource: "captures/example.dzi",
+		overlayGroups: ["All"],
 	},
 	{
 		uniqueID: "dfa609d2-3440-4024-84c6-99430a149c94",
@@ -54,6 +55,7 @@ const noitaCaptures = [
 		createdAt: new Date('2022-08-14T00:00:00'),
 		createdBy: "D3",
 		tileSource: "captures/play-2022-08-14.dzi",
+		overlayGroups: [],
 	},
 	{
 		uniqueID: "f702768a-5fe0-48e1-828a-b531d9efdb12",
@@ -69,6 +71,7 @@ const noitaCaptures = [
 		createdAt: new Date('2024-02-08T15:27:30+01:00'),
 		createdBy: "D3",
 		tileSource: "captures/2024-02-06-15-58-22-noita-normal-78633191.dzi",
+		overlayGroups: ["All"],
 	},
 	{
 		uniqueID: "6a0661b1-96bc-4a8d-94c2-b43d1f1c4cd9",
@@ -84,6 +87,7 @@ const noitaCaptures = [
 		createdAt: new Date('2024-02-08T19:02:16+01:00'),
 		createdBy: "D3",
 		tileSource: "captures/2024-02-06-15-58-22-noita-normal-786433191.dzi",
+		overlayGroups: ["All"],
 	},
 	{
 		uniqueID: "c9815905-6bb7-49e0-856e-4cf3d126bd92",
@@ -99,6 +103,7 @@ const noitaCaptures = [
 		createdAt: new Date('2024-02-20T12:39:52+01:00'),
 		createdBy: "D3",
 		tileSource: "captures/2024-02-14-07-46-57-noita-normal-786433191.dzi",
+		overlayGroups: ["All"],
 	},
 	{
 		uniqueID: "91adc4b2-70dd-4649-904a-5ab8dd5ed4c4",
@@ -114,6 +119,23 @@ const noitaCaptures = [
 		createdAt: new Date('2024-02-17T14:53:54+01:00'),
 		createdBy: "D3",
 		tileSource: "captures/2024-02-14-07-46-57-noita-purgatory-786433191.dzi",
+		overlayGroups: ["All"],
+	},
+	{
+		uniqueID: "ce67204f-7f9e-44c9-a64e-cb791e41672f",
+		name: "2024-03-25 17:42:49 NG 110638",
+		buildString: "Build Mar 25 2024 17:42:49",
+		builtAt: new Date('2024-03-25T17:42:49+02:00'),
+		platform: "Steam",
+		branch: "noitabeta",
+		executable: "noita.exe",
+		gameMode: "Normal",
+		seed: 110638,
+		ngPlusLevel: 1,
+		createdAt: new Date('2024-03-25T23:06:00+01:00'),
+		createdBy: "D3",
+		tileSource: "captures/2024-03-25-17-42-49-noita-ng-110638.dzi",
+		overlayGroups: ["All"],
 	},
 ];
 

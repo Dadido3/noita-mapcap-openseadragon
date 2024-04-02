@@ -1,11 +1,41 @@
-.overlay-highlight {
+.overlay-tooltip {
+	margin-left: 2px !important;
+}
+
+.overlay-box {
+	position: relative;
 	background-color: rgba(128, 128, 128, 0);
 	border: #c8893002 dashed 2px;
 	border-radius: 5px;
-	overflow: hidden;
 }
 
-.overlay-highlight:hover {
+.overlay-box:hover {
 	background-color: rgba(128, 128, 128, 0.05);
 	border: #c88930 dashed 2px;
+}
+
+.overlay-box.overlay-selected {
+	border: #ffb752 solid 2px;
+}
+
+.overlay-symbol {
+	position: relative;
+	image-rendering: pixelated;
+	border-radius: 5px;
+}
+
+.overlay-symbol:hover {
+	background-color: rgba(128, 128, 128, 0.05);
+	outline: #c88930 dashed 2px;
+}
+
+.overlay-symbol.overlay-selected {
+	outline: #ffb752 solid 2px;
+}
+
+.overlay-information {
+	width: 400px;
+	position: absolute;
+	top: 0;
+	left: 0;
 }
