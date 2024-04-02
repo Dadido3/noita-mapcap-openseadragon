@@ -16,6 +16,24 @@
 // along with noita-mapcap-openseadragon.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * @typedef {Object} Map_Capture
+ * @property {string} uniqueID The unique ID of the capture.
+ * @property {string} name The name of the capture.
+ * @property {string?} buildString The build string as it is stored in the Noita executable.
+ * @property {Date?} builtAt The point in time when the Noita build was created.
+ * @property {"Steam"} platform The used game distribution platform.
+ * @property {"main"|"noitabeta"} branch Which branch this build is on.
+ * @property {"noita.exe"|"noita_dev.exe"} executable Which Noita executable the capture was made with.
+ * @property {"Normal"|"Nightmare"|"Daily Run"|"Purgatory"} gameMode The game-mode of the capture.
+ * @property {number} seed The seed that was used for the capture. Must be an integer.
+ * @property {number} ngPlusLevel How many times the world was "restarted". A new game starts at 1. Must be an integer.
+ * @property {Date} createdAt Point in time when this capture was created.
+ * @property {string} createdBy Name or nickname of the person that created this capture.
+ * @property {string} tileSource Path to the DZI file.
+ * @property {Overlay_Object_Group[]} overlayGroups List of overlay groups to show.
+ */
+
+/**
  * Table of available captures.
  * Each with additional metadata like their width, height, top left (in-game) coordinate, game-mode, seed and more.
  * 

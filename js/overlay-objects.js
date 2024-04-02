@@ -16,6 +16,25 @@
 // along with noita-mapcap-openseadragon.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * @typedef {string} Overlay_Object_Group
+ * 
+ */
+
+/**
+ * @typedef {Object} Overlay_Object
+ * @property {string} uniqueID The unique ID of the overlay.
+ * @property {string} name The name of the overlay.
+ * @property {Overlay_Object_Group[]} overlayGroups List of groups that this overlay object is part of. This is used to associate overlay objects with map captures.
+ * @property {Date} createdAt Point in time when this overlay object was created.
+ * @property {Date} updatedAt Point in time when this overlay object was updated.
+ * @property {string[]} authoredBy Name or nickname of the persons that created/updated this overlay.
+ * @property {OpenSeadragon.Rect|OpenSeadragon.Point} location Place of this object as OSD Rect coordinates. This is in world coordinates.
+ * @property {OpenSeadragon.Placement|undefined} placement How to place the overlay at the given location.
+ * @property {HTMLElement} viewportElement HTML element that is shown in the world viewport.
+ * @property {string[]} modalHTML HTML that is shown when an overlay object is selected/active.
+ */
+
+/**
  * Table of available overlay objects.
  * 
  * @type {Overlay_Object[]}

@@ -16,43 +16,6 @@
 // along with noita-mapcap-openseadragon.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @typedef {string} Overlay_Object_Group
- * 
- */
-
-/**
- * @typedef {Object} Map_Capture
- * @property {string} uniqueID The unique ID of the capture.
- * @property {string} name The name of the capture.
- * @property {string?} buildString The build string as it is stored in the Noita executable.
- * @property {Date?} builtAt The point in time when the Noita build was created.
- * @property {"Steam"} platform The used game distribution platform.
- * @property {"main"|"noitabeta"} branch Which branch this build is on.
- * @property {"noita.exe"|"noita_dev.exe"} executable Which Noita executable the capture was made with.
- * @property {"Normal"|"Nightmare"|"Daily Run"|"Purgatory"} gameMode The game-mode of the capture.
- * @property {number} seed The seed that was used for the capture. Must be an integer.
- * @property {number} ngPlusLevel How many times the world was "restarted". A new game starts at 1. Must be an integer.
- * @property {Date} createdAt Point in time when this capture was created.
- * @property {string} createdBy Name or nickname of the person that created this capture.
- * @property {string} tileSource Path to the DZI file.
- * @property {Overlay_Object_Group[]} overlayGroups List of overlay groups to show.
- */
-
-/**
- * @typedef {Object} Overlay_Object
- * @property {string} uniqueID The unique ID of the overlay.
- * @property {string} name The name of the overlay.
- * @property {Overlay_Object_Group[]} overlayGroups List of groups that this overlay object is part of. This is used to associate overlay objects with map captures.
- * @property {Date} createdAt Point in time when this overlay object was created.
- * @property {Date} updatedAt Point in time when this overlay object was updated.
- * @property {string[]} authoredBy Name or nickname of the persons that created/updated this overlay.
- * @property {OpenSeadragon.Rect|OpenSeadragon.Point} location Place of this object as OSD Rect coordinates. This is in world coordinates.
- * @property {OpenSeadragon.Placement|undefined} placement How to place the overlay at the given location.
- * @property {HTMLElement} viewportElement HTML element that is shown in the world viewport.
- * @property {string[]} modalHTML HTML that is shown when an overlay object is selected/active.
- */
-
-/**
  * NoitaMap is a OpenSeadragon based viewer for showing captured maps of Noita.
  */
 class NoitaMap {
