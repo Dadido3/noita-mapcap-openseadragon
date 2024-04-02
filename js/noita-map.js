@@ -255,7 +255,6 @@ class NoitaMap {
 		this.#overlayObjects = overlayObjects;
 		this.#activeOverlayObject = null;
 		for (const overlayObject of overlayObjects) {
-			const noitaMap = this;
 			new OpenSeadragon.MouseTracker({
 				element: overlayObject.viewportElement,
 				clickHandler: (event) => {
