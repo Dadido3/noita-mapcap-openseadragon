@@ -37,10 +37,10 @@ class NoitaMap {
 	/** @type {Map_Capture} The currently active capture. */
 	#activeCapture;
 
-	/** @type {Overlay_Object[]} List of all overlay objects. */
+	/** @type {OverlayObject[]} List of all overlay objects. */
 	#overlayObjects;
 
-	/** @type {Overlay_Object?} The currently active/selected overlay object. */
+	/** @type {OverlayObject?} The currently active/selected overlay object. */
 	#activeOverlayObject;
 
 	/** @type {boolean} True when we should show the overlays. */
@@ -49,7 +49,7 @@ class NoitaMap {
 	/**
 	 * @param {Element} container A HTML container that the viewer will be rendered in.
 	 * @param {Map_Capture[]} captures List of map captures.
-	 * @param {Overlay_Object[]} overlayObjects List of overlay objects.
+	 * @param {OverlayObject[]} overlayObjects List of overlay objects.
 	 */
 	constructor(container, captures, overlayObjects) {
 		this.#osdViewer = OpenSeadragon({
@@ -248,7 +248,7 @@ class NoitaMap {
 
 		// Generate overlay object info container.
 		this.#uiActiveOverlayObjectInfo = document.createElement("div");
-		this.#osdViewer.addControl(this.#uiActiveOverlayObjectInfo, {});
+		this.#osdViewer.addControl(this.#uiActiveOverlayObjectInfo, {autoFade: false});
 		this.#uiActiveOverlayObjectInfo.id = "overlay-object-info";
 
 		// Prepare overlay objects.
@@ -256,7 +256,7 @@ class NoitaMap {
 		this.#activeOverlayObject = null;
 		for (const overlayObject of overlayObjects) {
 			new OpenSeadragon.MouseTracker({
-				element: overlayObject.viewportElement,
+				element: overlayObject.viewportHTMLElement,
 				clickHandler: (event) => {
 					// @ts-ignore: quick exists, openseadragon-index.d.ts is not up to date
 					if (event.quick) {
@@ -333,7 +333,7 @@ class NoitaMap {
 	 */
 	set activeOverlayObject(overlayObject) {
 		// Clean up UI and remove selected class.
-		if (this.#activeOverlayObject) {this.#activeOverlayObject.viewportElement.classList.remove("overlay-selected");}
+		if (this.#activeOverlayObject) {this.#activeOverlayObject.viewportHTMLElement.classList.remove("overlay-selected");}
 		this.#uiActiveOverlayObjectInfo.replaceChildren();
 
 		if (overlayObject && !overlayObject.overlayGroups.some(group => this.#activeCapture.overlayGroups.includes(group))) {
@@ -342,11 +342,10 @@ class NoitaMap {
 
 		// Update selected class and info box on the top right.
 		this.#activeOverlayObject = overlayObject;
-		if (this.#activeOverlayObject) {this.#activeOverlayObject.viewportElement.classList.add("overlay-selected");}
+		if (this.#activeOverlayObject) {this.#activeOverlayObject.viewportHTMLElement.classList.add("overlay-selected");}
 		if (this.#activeOverlayObject) {
-			let container = document.createElement("div");
+			let container = this.#activeOverlayObject.infoBoxHTMLElement();
 			container.classList.add("noita-decoration-9piece0");
-			container.innerHTML = this.#activeOverlayObject.modalHTML.join("\n");
 			this.#uiActiveOverlayObjectInfo.appendChild(container);
 		}
 	}
@@ -449,11 +448,7 @@ class NoitaMap {
 		for (const overlayObject of this.#overlayObjects) {
 			// Check if we have at least one overlay group in common.
 			if (overlayObject.overlayGroups.some(group => this.#activeCapture.overlayGroups.includes(group))) {
-				this.#osdViewer.addOverlay({
-					element: overlayObject.viewportElement,
-					location: overlayObject.location,
-					placement: overlayObject.placement,
-				});
+				overlayObject.addOverlay(this.#osdViewer);
 			}
 		}
 	}

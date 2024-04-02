@@ -84,11 +84,21 @@ body {
 	z-index: 1;
 	right: 0;
 	top: 0;
+	max-width: 400px;
 	overflow: auto;
 	display: flex !important;
 	flex-direction: column;
 	padding: 24px !important;
 	pointer-events: none;
+}
+
+.overlay-object-info-title {
+	font-weight: bold;
+}
+
+.overlay-object-info-links {
+	display: flex;
+	flex-direction: column;
 }
 
 #overlay-object-info > div {
