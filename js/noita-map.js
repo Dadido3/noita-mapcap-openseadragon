@@ -183,7 +183,7 @@ class NoitaMap {
 					uiButton.onclick = () => { this.#osdViewer.viewport.fitBounds(new OpenSeadragon.Rect(-150, -350, 1024, 512)); };
 				}
 				{
-					const uiButton = NoitaMap.#uiCreateNoitaInventoryBarItem("img/enlarge.png", "Toggle fullscreen");
+					const uiButton = NoitaMap.#uiCreateNoitaInventoryBarItem("img/spells/enlarge.png", "Toggle fullscreen");
 					uiToolbarGroup.appendChild(uiButton);
 					uiButton.onclick = () => {
 						const newState = !this.#osdViewer.isFullPage();
@@ -330,11 +330,11 @@ class NoitaMap {
 				node.appendChild(img);
 				img.className = "captures-list-entry-image";
 				switch (entry.gameMode) {
-					case "Normal": img.src = "img/gamemode-normal.png"; img.width = 31 * 2; break;
-					case "Daily Run": img.src = "img/gamemode-dailyrun.png"; img.width = 26 * 2; break;
-					case "Nightmare": img.src = "img/gamemode-nightmare.png"; img.width = 36 * 2; break;
-					case "Purgatory": img.src = "img/gamemode-purgatory.png"; img.width = 46 * 2; break;
-					default: img.src = "img/gamemode-unknown.png"; img.width = 38 * 2; break;
+					case "Normal": img.src = "img/gamemodes/normal.png"; img.width = 31 * 2; break;
+					case "Daily Run": img.src = "img/gamemodes/dailyrun.png"; img.width = 26 * 2; break;
+					case "Nightmare": img.src = "img/gamemodes/nightmare.png"; img.width = 36 * 2; break;
+					case "Purgatory": img.src = "img/gamemodes/purgatory.png"; img.width = 46 * 2; break;
+					default: img.src = "img/gamemodes/unknown.png"; img.width = 38 * 2; break;
 				}
 			}
 			{
@@ -352,7 +352,7 @@ class NoitaMap {
 				node.appendChild(bar);
 				bar.className = "captures-list-entry-bar";
 				if (entry.branch == "noitabeta") {
-					const item = NoitaMap.#uiCreateNoitaInventoryBarItem("img/beta.png", "Beta branch");
+					const item = NoitaMap.#uiCreateNoitaInventoryBarItem("img/spells/beta.png", "Beta branch");
 					bar.appendChild(item);
 				}
 			}*/
