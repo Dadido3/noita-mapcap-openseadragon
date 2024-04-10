@@ -4,8 +4,10 @@
 
 .overlay-box {
 	position: relative;
-	background-color: rgba(128, 128, 128, 0);
-	border: #c8893002 dashed 2px;
+	border-top: 2px dashed #794738;
+	border-left: 2px dashed #5F302C;
+	border-bottom: 2px dashed #582B28;
+	border-right: 2px dashed #5F302C;
 	border-radius: 5px;
 }
 

@@ -35,11 +35,10 @@
 
 /**
  * Table of available captures.
- * Each with additional metadata like their width, height, top left (in-game) coordinate, game-mode, seed and more.
+ * Each with additional metadata like their game-mode, seed and more.
  * 
  * The index of this list has to be in sync with the internal list of TiledImages inside of OpenSeadragon.
  * This means one shouldn't delete or add TiledImages after loadCaptures has been called.
- * TODO: Find a way to store user data inside of the TiledImages
  * @type {Map_Capture[]}
  */
 const noitaCaptures = [
@@ -57,7 +56,7 @@ const noitaCaptures = [
 		createdAt: new Date('2024-02-08T19:02:16+01:00'),
 		createdBy: "D3",
 		tileSource: "captures/example.dzi",
-		overlayGroups: ["All"],
+		overlayGroups: ["Normal"],
 	},
 	{
 		uniqueID: "dfa609d2-3440-4024-84c6-99430a149c94",
@@ -73,11 +72,11 @@ const noitaCaptures = [
 		createdAt: new Date('2022-08-14T00:00:00'),
 		createdBy: "D3",
 		tileSource: "captures/play-2022-08-14.dzi",
-		overlayGroups: [],
+		overlayGroups: ["Normal"],
 	},
 	{
 		uniqueID: "f702768a-5fe0-48e1-828a-b531d9efdb12",
-		name: "2024-02-06 15:58:22 NG 78633191",
+		name: "2024-02-06 15:58:22 Normal 78633191",
 		buildString: "Build Feb  6 2024 15:58:22",
 		builtAt: new Date('2024-02-06T15:58:22+02:00'),
 		platform: "Steam",
@@ -89,11 +88,11 @@ const noitaCaptures = [
 		createdAt: new Date('2024-02-08T15:27:30+01:00'),
 		createdBy: "D3",
 		tileSource: "captures/2024-02-06-15-58-22-noita-normal-78633191.dzi",
-		overlayGroups: ["All"],
+		overlayGroups: ["Normal"],
 	},
 	{
 		uniqueID: "6a0661b1-96bc-4a8d-94c2-b43d1f1c4cd9",
-		name: "2024-02-06 15:58:22 NG 786433191",
+		name: "2024-02-06 15:58:22 Normal 786433191",
 		buildString: "Build Feb  6 2024 15:58:22",
 		builtAt: new Date('2024-02-06T15:58:22+02:00'),
 		platform: "Steam",
@@ -105,11 +104,11 @@ const noitaCaptures = [
 		createdAt: new Date('2024-02-08T19:02:16+01:00'),
 		createdBy: "D3",
 		tileSource: "captures/2024-02-06-15-58-22-noita-normal-786433191.dzi",
-		overlayGroups: ["All"],
+		overlayGroups: ["Normal"],
 	},
 	{
 		uniqueID: "c9815905-6bb7-49e0-856e-4cf3d126bd92",
-		name: "2024-02-14 07:46:57 NG 786433191",
+		name: "2024-02-14 07:46:57 Normal 786433191",
 		buildString: "Build Feb 14 2024 07:46:57",
 		builtAt: new Date('2024-02-14T07:46:57+02:00'),
 		platform: "Steam",
@@ -121,7 +120,7 @@ const noitaCaptures = [
 		createdAt: new Date('2024-02-20T12:39:52+01:00'),
 		createdBy: "D3",
 		tileSource: "captures/2024-02-14-07-46-57-noita-normal-786433191.dzi",
-		overlayGroups: ["All"],
+		overlayGroups: ["Normal"],
 	},
 	{
 		uniqueID: "91adc4b2-70dd-4649-904a-5ab8dd5ed4c4",
@@ -137,11 +136,11 @@ const noitaCaptures = [
 		createdAt: new Date('2024-02-17T14:53:54+01:00'),
 		createdBy: "D3",
 		tileSource: "captures/2024-02-14-07-46-57-noita-purgatory-786433191.dzi",
-		overlayGroups: ["All"],
+		overlayGroups: ["Purgatory"],
 	},
 	{
 		uniqueID: "ce67204f-7f9e-44c9-a64e-cb791e41672f",
-		name: "2024-03-25 17:42:49 NG 110638",
+		name: "2024-03-25 17:42:49 Normal 110638",
 		buildString: "Build Mar 25 2024 17:42:49",
 		builtAt: new Date('2024-03-25T17:42:49+02:00'),
 		platform: "Steam",
@@ -153,7 +152,71 @@ const noitaCaptures = [
 		createdAt: new Date('2024-03-25T23:06:00+01:00'),
 		createdBy: "D3",
 		tileSource: "captures/2024-03-25-17-42-49-noita-ng-110638.dzi",
-		overlayGroups: ["All"],
+		overlayGroups: ["Normal"],
+	},
+	{
+		uniqueID: "7f130146-51de-4499-a65b-1a68f02da9e2",
+		name: "2019-10-24 20:35:15 Normal 956818076",
+		buildString: "Build Oct 24 2019 20:35:15",
+		builtAt: new Date('2019-10-24T20:35:15+03:00'),
+		platform: "Steam",
+		branch: "noitabeta",
+		executable: "noita.exe",
+		gameMode: "Normal",
+		seed: 956818076,
+		ngPlusLevel: 1,
+		createdAt: new Date('2019-10-25T17:07:00+02:00'),
+		createdBy: "D3",
+		tileSource: "captures/2019-10-24-20-35-15-noita-normal-956818076.dzi",
+		overlayGroups: ["Normal"],
+	},
+	{
+		uniqueID: "9bf01626-f013-41a7-a05a-3097714339a1",
+		name: "2019-10-31 20:20:42 Normal 305058757",
+		buildString: "Build Oct 31 2019 20:20:42",
+		builtAt: new Date('2019-10-31T20:20:42+03:00'),
+		platform: "Steam",
+		branch: "noitabeta",
+		executable: "noita.exe",
+		gameMode: "Normal",
+		seed: 305058757,
+		ngPlusLevel: 1,
+		createdAt: new Date('2019-11-02T22:17:00+02:00'),
+		createdBy: "D3",
+		tileSource: "captures/2019-10-31-20-20-42-noita-normal-305058757.dzi",
+		overlayGroups: ["Normal"],
+	},
+	{
+		uniqueID: "2789e0f1-6351-48a5-a23a-ed1a1037e5d7",
+		name: "2020-05-29 19:39:42 Normal 940774721",
+		buildString: "Build May 29 2020 19:39:42",
+		builtAt: new Date('2020-05-29T19:39:42+03:00'),
+		platform: "Steam",
+		branch: "noitabeta",
+		executable: "noita.exe",
+		gameMode: "Normal",
+		seed: 940774721,
+		ngPlusLevel: 1,
+		createdAt: new Date('2020-05-31T18:53:00+02:00'),
+		createdBy: "D3",
+		tileSource: "captures/2020-05-29-19-39-42-normal-940774721.dzi",
+		overlayGroups: ["Normal"],
+	},
+	{
+		uniqueID: "af5f0f51-cca4-453c-b379-0ba33bbd1e26",
+		name: "2020-10-15 17:56:42 Normal 87810210",
+		buildString: "Build Oct 15 2020 17:56:42",
+		builtAt: new Date('2020-10-29T17:56:42+03:00'),
+		platform: "Steam",
+		branch: "noitabeta",
+		executable: "noita.exe",
+		gameMode: "Normal",
+		seed: 87810210,
+		ngPlusLevel: 1,
+		createdAt: new Date('2020-10-15T21:39:00+02:00'),
+		createdBy: "D3",
+		tileSource: "captures/2020-10-15-17-56-42-normal-87810210.dzi",
+		overlayGroups: ["Normal"],
 	},
 ];
 

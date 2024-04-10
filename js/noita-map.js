@@ -142,7 +142,9 @@ class NoitaMap {
 		});
 
 		// Set first map capture as default/fallback.
+		let activeCaptureID;
 		if (captures[0]) {
+			activeCaptureID = captures[0].uniqueID;
 			this.#activeCapture = captures[0];
 		} else {
 			throw new Error("Can't set default map capture. Ensure that you have passed a list of valid map captures.");
@@ -150,7 +152,9 @@ class NoitaMap {
 
 		// Get some variables from the URL.
 		const urlParams = new URLSearchParams(window.location.search);
-		let activeCaptureID = urlParams.get("capture");
+		if (urlParams.has("capture")) {
+			activeCaptureID = urlParams.get("capture");
+		}
 		this.#overlayEnabled = urlParams.get("overlay") ? urlParams.get("overlay") === "1" : false;
 
 		// Load captures.
