@@ -11,8 +11,11 @@ You can self host this somewhere, and use it to view/show map captures that you 
 
    :heavy_exclamation_mark: You need at least Noita MapCap 2.7.0 to be able to export DZI files.
 
-2. Copy the generated `output.dzi` and the `output_files` directory into [maps/](maps/). Resulting in the following paths `maps/output.dzi` and `maps/output_files/0/...`.
+2. Copy the generated `output.dzi` and the `output_files` directory into [captures/](captures/). Resulting in the following paths `captures/output.dzi` and `captures/output_files/0/...`.
 
-3. Add a new entry to `noitaCaptures` in [js/captures.js](js/script.js) pointing towards your newly added `maps/output.dzi`.
+3. Add a new entry to `noitaCaptures` in [js/captures.js](js/captures.js) pointing towards your newly added `captures/output.dzi`.
+   You should follow the same format that the other entries are using.
+   And you can get rid of all the example entries once you have added your own capture.
 
-4. Upload all the files to some web server. No PHP or any other fancy stuff is required.
+4. Upload all the files to some web server.
+   No PHP or any other fancy stuff is required.
